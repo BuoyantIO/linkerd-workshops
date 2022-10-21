@@ -4,7 +4,6 @@
 
 * linkerd cli
 * helm
-* flux cli (optional)
 * Your certificates generated in 02
 
 ## Outline
@@ -90,10 +89,5 @@ helm install linkerd-viz --namespace linkerd-viz \
 ## Step 5: wait for the dashboard to finish intalling
 
 linkerd viz check
-
-```
-
-```bash
-# Install Linkerd with flux
 
 ```
