@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: linkerd
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: workshop-root
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: root.linkerd.cluster.local
+  secretName: linkerd-trust-anchor
+  duration: 8760h # 365 days
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  usages:
+  - cert sign
+  - crl sign
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: workshop-intermediate-issuer
+spec:
+  ca:
+    secretName: linkerd-trust-anchor
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-identity-issuer
+  namespace: linkerd
+spec:
+  isCA: true
+  commonName: identity.linkerd.cluster.local
+  secretName: linkerd-identity-issuer
+  duration: 48h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: workshop-intermediate-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+  - identity.linkerd.cluster.local
+  usages:
+  - cert sign
+  - crl sign
+  - server auth
+  - client auth
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+    name: linkerd-identity-trust-roots
+spec:
+  sources:
+  - secret:
+      name: "linkerd-trust-anchor"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "ca-bundle.crt"
