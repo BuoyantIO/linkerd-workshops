@@ -14,20 +14,20 @@
 ```bash
 # Using the step cli to generate certificates
 
-## Start here,https://linkerd.io/2.12/tasks/generate-certificates/,
-## for the relevant documentation from our site.
+## Please see the linkerd docs for more details:
+## https://linkerd.io/2.12/tasks/generate-certificates/
 
-## Next create your root CA, this is the foundation for trust both 
-## in and between your clusters.
+## Step 1: Create your root CA, this is the foundation for 
+## trust both in and between your clusters.
 
-## Strongly consider making yourself a temp directory for this
+### Strongly consider making yourself a temp directory for this
 
 step certificate create root.linkerd.cluster.local ca.crt ca.key \
   --profile root-ca --no-password --insecure
 
-## After the root CA has been created you'll use those files to
-## create the intermediary CA that the control plane will use to 
-## issue individual workload certificates.
+## Step 2: Create the intermediary CA 
+### The control plane will use to this certificate to issue
+### individual workload certificates.
 
 step certificate create identity.linkerd.cluster.local issuer.crt issuer.key \
 --profile intermediate-ca --not-after 8760h --no-password --insecure \
@@ -40,7 +40,7 @@ step certificate create identity.linkerd.cluster.local issuer.crt issuer.key \
 ```bash
 # Using cert-manager with Linkerd
 
-## An alternate method for generating, an even rotating, our 
+## An alternate method for generating, and even rotating, our 
 ## certificates is to use a tool like cert manager. We 
 ## recommend that production users of Linkerd seriously 
 ## consider using cert-manager.
@@ -80,6 +80,5 @@ kubectl get -n cert-manager secrets linkerd-trust-anchor -ojson |
 
 kubectl get -n linkerd secrets linkerd-identity-issuer -ojson |
   jq '.data."tls.crt"' -r | base64 -d | openssl x509 -noout -text
-
 
 ```
