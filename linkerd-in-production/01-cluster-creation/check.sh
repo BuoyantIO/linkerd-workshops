@@ -10,7 +10,7 @@ check () {
     fi
 }
 
-check k3d "https://k3d.io"
+# check k3d "https://k3d.io"
 check step "https://smallstep.com/docs/step-cli/installation"
 check kubectl "https://kubernetes.io/docs/tasks/tools/#kubectl"
 check helm "https://helm.sh/docs/intro/install/"

@@ -42,3 +42,4 @@ $SHELL ${scriptdir}/check.sh
 #@HIDE
 
 $SHELL ${scriptdir}/${CLUSTER_TYPE}/create.sh "$CLUSTER_NAME"
+chmod 600 $KUBECONFIG
