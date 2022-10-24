@@ -1,10 +1,10 @@
 #!/bin/bash
 
+set -e
+
 CLUSTER_NAME="$1"
 
 if [ -z "$CLUSTER_NAME" ]; then CLUSTER_NAME="workshop"; fi
-
-set -x
 
 #@SHOW
 

@@ -15,4 +15,4 @@ check step "https://smallstep.com/docs/step-cli/installation"
 check kubectl "https://kubernetes.io/docs/tasks/tools/#kubectl"
 check helm "https://helm.sh/docs/intro/install/"
 
-echo "Great, you have all the tools we need!"
+#@print "# Great, you have all the tools we need!"

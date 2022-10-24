@@ -2,27 +2,43 @@
 
 set -e
 
+# scriptdir is the directory this script lives in
+scriptdir=$(cd $(dirname $0) ; pwd)
+
+# rootdir is our parent directory
+rootdir=$(cd ${scriptdir}/.. ; pwd)
+
+WORKDIR=/tmp/l5d-prod
+rm -rf ${WORKDIR}
+mkdir -p ${WORKDIR}
+
+KUBECONFIG=${WORKDIR}/kubeconfig.yaml
+
 CLUSTER_TYPE="$1"
 test -n "$CLUSTER_TYPE"
 
 CLUSTER_NAME="${CLUSTER_NAME:-workshop}"
-
-KUBECONFIG=$(pwd)/.kubeconfig
 
 if [ -z "$CLUSTER_TYPE" ]; then \
     echo "Usage: $0 <cluster-type>" >&2 ;\
     exit 1 ;\
 fi
 
-if [ ! -x "create-${CLUSTER_TYPE}.sh" ]; then \
+if [ ! -f "${scriptdir}/${CLUSTER_TYPE}/create.sh" ]; then \
     echo "Error: cluster type $CLUSTER_TYPE not supported" >&2 ;\
     exit 1 ;\
 fi
 
 clear
 
-$SHELL check.sh
+$SHELL ${scriptdir}/check.sh
 
-$SHELL create-"$CLUSTER_TYPE".sh "$CLUSTER_NAME"
+#@print
+#@print "# We've set WORKDIR=${WORKDIR}; all our various files will be written there."
+#@print "# To start with, we're putting our KUBECONFIG in ${KUBECONFIG}."
+#@print ""
+#@SHOW
+#@wait
+#@HIDE
 
-$SHELL setup-cluster.sh
+$SHELL ${scriptdir}/${CLUSTER_TYPE}/create.sh "$CLUSTER_NAME"
