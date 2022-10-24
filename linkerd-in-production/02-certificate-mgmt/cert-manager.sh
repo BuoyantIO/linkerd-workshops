@@ -53,7 +53,7 @@ helm upgrade --install \
 #
 # 2. We'll use that root CA to create and sign a trust anchor certificate,
 #    signed by the root CA. This will stored in the cert-manager namespace,
-#    in the linkerd-identity-trust-roots Secret.
+#    in the linkerd-trust-anchor Secret.
 #@wait
 #
 #   (It's important to note that Linkerd will not have access to anything in
@@ -61,14 +61,15 @@ helm upgrade --install \
 #    able to access the cert-manager namespace -- set your RBAC accordingly!)
 #@wait
 #
-# 3. We'll use that trust anchor to set up _another_ CA, which we'll use
-#    to sign our issuer certificate. The issuer certificate must be stored
-#    in the linkerd namespace.
+# 3. We'll use that trust anchor to set up _another_ cert-manager CA, which
+#    we'll use to sign our issuer certificate. The issuer certificate must be
+#    stored in the linkerd namespace, in the linkerd-identity-issuer Secret.
 #@wait
 #
 # 4. Finally, we'll use the cert-manager trust extension to copy the public
 #    key for our trust anchor from the cert-manager namespace to the linkerd
-#    namespace, so that Linkerd has access to it.
+#    namespace, so that Linkerd has access to it (in the ConfigMap named
+#    linkerd-identity-trust-roots -- note ConfigMap, not Secret!).
 #@wait
 #
 # Worth remembering: our trust anchor is _not_ self-signed any more - which
@@ -89,7 +90,7 @@ bat manifests/cert-manager-ca-root.yaml
 kubectl apply -f manifests/cert-manager-ca-root.yaml
 #@wait
 
-#@clear
+#@echo
 # Let's look at the CA root's Secret. This is deliberately set up in the
 # cert-manager namespace so that other bits of the system don't have access
 # to it.
@@ -97,6 +98,7 @@ kubectl apply -f manifests/cert-manager-ca-root.yaml
 kubectl describe secret -n cert-manager cert-manager-ca-root
 #@wait
 
+#@echo
 # Just to prove that there's really a certificate in there, let's look
 # at it with 'step certificate inspect'. The 'tls.crt' key that appeared
 # in the output above has a value which is a base64-encoded certificate --
@@ -126,14 +128,14 @@ bat manifests/cert-manager-trust-anchor.yaml
 kubectl apply -f manifests/cert-manager-trust-anchor.yaml
 #@wait
 
-#@clear
+#@echo
 # Let's look at the trust anchor's Secret. Again, this lives in the
 # cert-manager namespace _so that_ it's not visible from outside.
 
 kubectl describe secret -n cert-manager linkerd-trust-anchor
 #@wait
 
-#@clear
+#@echo
 # We can repeat the same trick with unwrapping tls.crt to inspect it,
 # too. Note the 30-day duration.
 
@@ -159,6 +161,7 @@ kubectl apply -f manifests/cert-manager-identity-issuer.yaml
 kubectl describe secret -n linkerd linkerd-identity-issuer
 
 #@wait
+#@echo
 # One last look into the Secret itself. Note the duration, again.
 kubectl get secret -n linkerd linkerd-identity-issuer \
                    -o jsonpath='{ .data.tls\.crt }' \
@@ -172,20 +175,28 @@ kubectl get secret -n linkerd linkerd-identity-issuer \
 # Almost done. Finally, we'll use the Trust extension to copy the trust
 # anchor's public key into the trust anchor bundle ConfigMap that Linkerd
 # uses.
+#
+# Last time for the CRDs.
 
 #@wait
-# Last time for the CRDs:
-
 #@noshow
 bat manifests/ca-bundle.yaml
 
+#@echo
+# Apply them and then look at the resulting ConfigMap.
 kubectl apply -f manifests/ca-bundle.yaml
 
-#@echo
-# Let's make sure that the ConfigMap is present...
 kubectl get cm -n linkerd
 #@wait
 
+#@echo
+# Note that this time we need to look at the 'ca-bundle.crt' key, not the
+# 'tls.crt' key, and that there's no extra layer of base64'ing going on.
+kubectl get cm -n linkerd linkerd-identity-trust-roots \
+        -o jsonpath='{ .data.ca-bundle\.crt }' | \
+        step certificate inspect -
+
+#@wait
 #@clear
 # Finally, install Linkerd, and tell it to use cert-manager for certificates.
 

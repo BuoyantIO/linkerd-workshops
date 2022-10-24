@@ -97,8 +97,7 @@ linkerd install \
   --identity-issuer-key-file ${CA_DIR}/identity.key \
   | kubectl apply -f -
 
-#@wait
-#@clear
+#@echo
 # After that, we'll use 'linkerd check' to make sure that all is well (this
 # will check all the certificates as part of its work).
 

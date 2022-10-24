@@ -22,7 +22,7 @@ spec:
   ## no more than 15 days after it's issued.
   duration: 720h
   renewBefore: 360h
-  ## It must be issued (signed) by trust anchor ClusterIssuer.
+  ## It must be issued (signed) by the CA root ClusterIssuer.
   issuerRef:
     name: cert-manager-ca-root
     kind: ClusterIssuer

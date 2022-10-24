@@ -10,7 +10,7 @@ spec:
   sources:
   - secret:
       name: "linkerd-trust-anchor"
-      key: "ca.crt"
+      key: "tls.crt"
   target:
     configMap:
       key: "ca-bundle.crt"
