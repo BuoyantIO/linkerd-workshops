@@ -1,0 +1,54 @@
+## Note that all of these resources are in the cert-manager namespace.
+##
+## First, we create a ClusterIssuer that will be used to sign the trust
+## anchor certificate. (We've been talking about "signing" certificates,
+## but cert-manager calls that "issuing". They mean the same thing here.)
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cert-manager-self-signed-issuer
+  namespace: cert-manager
+spec:
+  # This ClusterIssuer uses a self-signed certificate.
+  selfSigned: {}
+---
+## Next, we use a Certificate resource to tell cert-manager how to create
+## a self-signed certificate to be the root of the cert-manager CA. NOTE: this
+## certificate is in the cert-manager namespace! That's because we really, really
+## don't want its private key visible anywhere else in the cluster.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-manager-ca-root
+  namespace: cert-manager
+spec:
+  # Set the common name of the subject.
+  commonName: root.cert-manager.cluster.local
+  # This is itself a CA certificate.
+  isCA: true
+  # It must be issued (signed) by the ClusterIssuer above.
+  issuerRef:
+    name: cert-manager-self-signed-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  # It uses a 256-bit ECDSA private key...
+  privateKey:
+    algorithm: ECDSA
+  # ...which will be stored in this Secret.
+  secretName: cert-manager-ca-root
+  # Note that we didn't say anything about duration or renewal times.
+  # That means that this certificate will use the defaults: it will expire
+  # in 90 days, and should be renewed by the 30-day mark (and cert-manager
+  # will handle that for us).
+---
+## Finally, create a ClusterIssuer that will use the self-signed root CA
+## Certificate above to sign requests. We'll use this for the Linkerd
+## trust anchor.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cert-manager-ca-root
+  namespace: cert-manager
+spec:
+  ca:
+    secretName: cert-manager-ca-root
