@@ -57,6 +57,7 @@ fi
 # for HA mode.
 #
 # We'll do this in ${WORKDIR}.
+helm repo add linkerd https://helm.linkerd.io/stable
 
 cd ${WORKDIR}
 #@noshow

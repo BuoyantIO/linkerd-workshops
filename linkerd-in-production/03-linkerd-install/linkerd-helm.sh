@@ -46,6 +46,8 @@ fi
 # We start by using Helm to install the Linkerd CRDs. This is a manual step
 # because of changes in how Helm 3 handles CRDs.
 
+helm repo add linkerd https://helm.linkerd.io/stable
+
 #$ helm install linkerd-crds linkerd/linkerd-crds -n linkerd
 #@noshow
 helm install linkerd-crds -n linkerd ${scriptdir}/linkerd-crds-1.4.0.tgz
