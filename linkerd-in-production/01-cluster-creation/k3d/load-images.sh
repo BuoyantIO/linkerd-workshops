@@ -4,6 +4,7 @@ set -e
 
 # scriptdir is the directory this script lives in
 scriptdir=$(cd $(dirname $0) ; pwd)
+cd "${scriptdir}"
 
 CLUSTER_NAME="$1"
 
@@ -19,4 +20,4 @@ fi
 # images for things we'll need. This will take a little bit of time,
 # but save us a lot of bandwidth.
 
-k3d image import -c ${CLUSTER_NAME} ${scriptdir}/images.tar
+k3d image import -c ${CLUSTER_NAME} images.tar
