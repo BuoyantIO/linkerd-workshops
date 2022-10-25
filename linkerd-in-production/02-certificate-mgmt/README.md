@@ -71,7 +71,7 @@ helm upgrade --install -n cert-manager cert-manager-trust \
 
 kubectl create ns linkerd
 
-kubectl apply -f bootstrap_ca.yaml
+kubectl apply -f manifests/bootstrap_ca.yaml
 
 ### Take a look at our custom objects
 
