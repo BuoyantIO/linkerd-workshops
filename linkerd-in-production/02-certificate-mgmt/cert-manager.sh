@@ -174,6 +174,8 @@ bat manifests/cert-manager-identity-issuer.yaml
 # We'll apply those and then look at the resulting Secret.
 kubectl apply -f manifests/cert-manager-identity-issuer.yaml
 
+sleep 3
+
 kubectl describe secret -n linkerd linkerd-identity-issuer
 
 #@wait
