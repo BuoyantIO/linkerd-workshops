@@ -69,6 +69,8 @@ helm upgrade --install -n cert-manager cert-manager-trust \
 
 ## Step 4: Create certs for Linkerd
 
+kubectl create ns linkerd
+
 kubectl apply -f bootstrap_ca.yaml
 
 ### Take a look at our custom objects
