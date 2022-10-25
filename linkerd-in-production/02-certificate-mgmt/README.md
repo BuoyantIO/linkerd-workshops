@@ -52,6 +52,7 @@ step certificate create identity.linkerd.cluster.local issuer.crt issuer.key \
 ## Step 1: add the jetstack helm repo 
 
 helm repo add jetstack https://charts.jetstack.io
+helm repo add linkerd https://helm.linkerd.io/stable
 helm repo update
 
 ## Step 2: Install cert-manager
@@ -75,7 +76,7 @@ kubectl apply -f manifests/bootstrap_ca.yaml
 
 ### Take a look at our custom objects
 
-cat bootstrap_ca.yaml
+cat manifests/bootstrap_ca.yaml
 
 ### Inspect the root certificate
 
