@@ -28,19 +28,35 @@ fi
 #
 # We start by using Helm to install cert-manager.
 helm repo add jetstack https://charts.jetstack.io --force-update
+#$ helm upgrade --install \
+#     -n cert-manager --create-namespace \
+#     cert-manager \
+#     jetstack/cert-manager \
+#     --set installCRDs=true \
+#     --wait
+#@noshow
 helm upgrade --install \
-     -n cert-manager --create-namespace \
-     cert-manager jetstack/cert-manager \
-     --set installCRDs=true \
-     --wait
+    -n cert-manager --create-namespace \
+    cert-manager \
+    ${scriptdir}/cert-manager-v1.10.0.tgz \
+    --set installCRDs=true \
+    --wait
 
 # Also install the JetStack 'trust' tool. More on this in a bit.
+#$ helm upgrade --install \
+#     -n cert-manager \
+#     cert-manager-trust \
+#     jetstack/cert-manager-trust \
+#     --wait \
+#     && echo "DONE!"
+#@noshow
 helm upgrade --install \
-     -n cert-manager cert-manager-trust \
-     jetstack/cert-manager-trust \
+     -n cert-manager \
+     cert-manager-trust \
+     ${scriptdir}/cert-manager-trust-v0.2.0.tgz \
      --wait \
      && echo "DONE!"
-     
+
 #@wait
 #@clear
 # OK. Before messing with Linkerd we need to set up a few things using
@@ -195,22 +211,6 @@ kubectl get cm -n linkerd
 kubectl get cm -n linkerd linkerd-identity-trust-roots \
         -o jsonpath='{ .data.ca-bundle\.crt }' | \
         step certificate inspect -
-
-#@wait
-#@clear
-# Finally, install Linkerd, and tell it to use cert-manager for certificates.
-
-linkerd install --crds | kubectl apply -f -
-
-linkerd install \
-  --identity-external-issuer \
-  --set identity.externalCA=true \
-  | kubectl apply -f -
-
-#@echo
-# Check to see if everything still looks good.
-linkerd check --proxy
-#@wait
 
 #@clear
 # When all is said and done, here's what you'll end up with.
