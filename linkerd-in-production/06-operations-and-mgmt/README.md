@@ -146,14 +146,15 @@ linkerd check --proxy
 
 ## Step 6: Rotate the issuer
 
-### Please follow the steps from the issuer rotation section above.
+### Please follow the steps from the 
+### issuer rotation section above.
 ### You can read more about the steps 
 ### required here:
 ### https://linkerd.io/2.12/tasks/manually-rotating-control-plane-tls-credentials/#rotating-the-identity-issuer-certificate
 
 ## Step 7: Remove the old root CA
 
-linkerd upgrade  --identity-trust-anchors-file=./ca-new.crt  | kubectl apply -f -
+linkerd upgrade --identity-trust-anchors-file=./ca-new.crt | kubectl apply -f -
 
 ### Alternatively please feel free to use
 ### helm instead of the linkerd cli
@@ -231,7 +232,7 @@ helm upgrade linkerd-control-plane linkerd/linkerd-control-plane --atomic --vers
 ### to be rolled back automatically in the 
 ### event of a failure.
 
-## Upgrading again, or rolling back
+## Upgrading again, or rolling back,
 ## depending on your perspective.
 
 helm upgrade linkerd-crds linkerd/linkerd-crds --version 2.12.2

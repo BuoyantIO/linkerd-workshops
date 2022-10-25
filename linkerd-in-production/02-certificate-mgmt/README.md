@@ -30,8 +30,12 @@ step certificate create root.linkerd.cluster.local ca.crt ca.key \
 ### individual workload certificates.
 
 step certificate create identity.linkerd.cluster.local issuer.crt issuer.key \
---profile intermediate-ca --not-after 8760h --no-password --insecure \
---ca ca.crt --ca-key ca.key
+  --profile intermediate-ca \
+  --not-after 8760h \
+  --no-password \
+  --insecure \
+  --ca ca.crt \
+  --ca-key ca.key
 
 ## Store all these certificates securely as you'll need them later
 
