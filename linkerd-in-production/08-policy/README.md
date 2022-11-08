@@ -259,7 +259,7 @@ linkerd viz authz -n booksapp deployment
 
 linkerd viz stat deploy -n booksapp
 
-kubectl port-forward svc/webapp 7000:7000
+kubectl port-forward -n booksapp svc/webapp 7000:7000
 
 ### Browse over and explore your app, also if you put a watch
 ### on linkerd viz stat deploy -n booksapp you'll see very
@@ -271,11 +271,11 @@ kubectl port-forward svc/webapp 7000:7000
 
 kubectl apply -f manifests/booksapp/authors_modify_route.yaml
 
-manifests/booksapp/authors_modify_route.yaml
+cat manifests/booksapp/authors_modify_route.yaml
 
 kubectl apply -f manifests/booksapp/authors_modify_policy.yaml
 
-manifests/booksapp/authors_modify_policy.yaml
+cat manifests/booksapp/authors_modify_policy.yaml
 
 ### With this we've wrapped up our demo. You can see when we 
 ### get to route based policy we've significantly increased the
