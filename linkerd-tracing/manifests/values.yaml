@@ -1,0 +1,9 @@
+config:
+  allow-snippet-annotations: "true"
+  ssl-redirect: "false"
+  enable-opentracing: "true"
+  enable-vts-status: "false"
+  zipkin-collector-host: collector.linkerd-jaeger
+  zipkin-sample-rate: "0.5"
+podAnnotations:
+  linkerd.io/inject: enabled
