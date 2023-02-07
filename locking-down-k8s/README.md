@@ -31,7 +31,7 @@ We recommend that workshop attendees follow these instructions for creating an o
 ## Creating a cluster with Civo
 
 ```bash
-civo k8s create workshop -s "${size}" -r g4s.kube.medium
+civo k8s create workshop -s g4s.kube.medium
 ```
 
 ## Outline
