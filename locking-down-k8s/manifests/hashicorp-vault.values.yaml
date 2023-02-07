@@ -1,0 +1,26 @@
+global:
+  tlsDisable: true
+
+injector:
+  enabled: false
+
+server:
+  auditStorage:
+    enabled: false
+
+  standalone:
+    enabled: true
+
+  dev:
+    enabled: true
+
+    devRootToken: root-token-1234
+
+  ha:
+    enabled: false
+
+ui:
+  enabled: true
+  serviceType: ClusterIP
+  serviceNodePort: null
+  externalPort: 8200

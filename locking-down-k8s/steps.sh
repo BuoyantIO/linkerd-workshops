@@ -5,7 +5,7 @@ clear
 ## Cluster setup
 k3d cluster delete workshop > /dev/null 2>&1 || true
 
-k3d cluster create workshop > /dev/null 2>&1
+k3d cluster create workshop --wait > /dev/null 2>&1
 
 # Alternative if you need registry config!
 # k3d cluster create workshop --registry-config registries.yaml > /dev/null 2>&1
