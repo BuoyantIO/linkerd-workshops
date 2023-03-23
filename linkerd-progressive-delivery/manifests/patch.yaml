@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podinfo
+spec:
+  template:
+    # metadata:
+      # annotations:
+    spec:
+      containers:
+        - name: podinfod
+          securityContext:
+            runAsUser: 1337
+          # env:
+          # - name: PODINFO_UI_COLOR
+          #   value: '#1919FF' # #008000 #1919FF
+          command:
+            - ./podinfo
+            - --port=9898
+            - --port-metrics=9797
+            - --grpc-port=9999
+            - --grpc-service-name=podinfo
+            - --level=info
+            - --random-delay=false
+            - --random-error=false
+            # - --ui-logo=https://github.com/wego-example/podinfo-deploy/raw/logo/weaveicon.png
+            # - --ui-logo=https://github.com/cncf/artwork/raw/master/projects/linkerd/icon/color/linkerd-icon-color.png
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podinfo
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: podinfo

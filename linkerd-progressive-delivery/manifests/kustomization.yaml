@@ -1,0 +1,12 @@
+namespace: podinfo
+bases:
+  - "github.com/stefanprodan/podinfo/kustomize/?ref=6.0.3"
+
+resources:
+  - ns.yaml
+  - canary.yaml
+  - generator.yaml
+  - frontend.yaml
+
+patchesStrategicMerge:
+  - patch.yaml
