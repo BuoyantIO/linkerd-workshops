@@ -11,11 +11,6 @@ if ! check_ns kube-system; then \
     exit 1 ;\
 fi
 
-if check_ns linkerd; then \
-    echo "Cluster already has Linkerd installed. See create-cluster.sh and setup-demo.sh." >&2 ;\
-    exit 1 ;\
-fi
-
 # Make sure that we have what we need in our $PATH. Makefile-style escapes are
 # required here.
 missing= ;\
