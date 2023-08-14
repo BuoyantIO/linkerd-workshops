@@ -27,3 +27,4 @@ helm upgrade -i flagger flagger/flagger \
 --set metricsServer=http://prometheus.linkerd-viz:9090 \
 --set linkerdAuthPolicy.create=true
 
+kubectl apply -k manifests/
