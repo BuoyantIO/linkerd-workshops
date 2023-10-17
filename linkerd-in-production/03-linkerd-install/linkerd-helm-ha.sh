@@ -45,6 +45,7 @@ fi
 #$ linkerd install \
 #    --identity-external-issuer \
 #    --set identity.externalCA=true \
+#    --ha \
 #    | kubectl apply -f -
 #@wait
 #@clear
